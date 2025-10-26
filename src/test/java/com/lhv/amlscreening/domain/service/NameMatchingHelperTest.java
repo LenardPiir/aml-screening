@@ -18,7 +18,7 @@ class NameMatchingHelperTest extends ABaseUnitTest {
 
   private final NameMatchingHelper nameMatchingHelper = new NameMatchingHelper();
 
-  static Stream<Arguments> confidenceTestCases() {
+  static Stream<Arguments> confidenceTestCases_provider() {
     return Stream.of(
         Arguments.of("Exact match", 1, true, HIGH),
         Arguments.of("Non-exact match with 0 matches", 0, false, NONE),
@@ -28,7 +28,7 @@ class NameMatchingHelperTest extends ABaseUnitTest {
   }
 
   @ParameterizedTest(name = "{0}")
-  @MethodSource("confidenceTestCases")
+  @MethodSource("confidenceTestCases_provider")
   void testDetermineConfidence(
       String caseName, int numMatches, boolean isExactMatch, MatchConfidence expectedConfidence) {
     List<SanctionedListEntity> matchingNames =
@@ -38,7 +38,7 @@ class NameMatchingHelperTest extends ABaseUnitTest {
     assertEquals(expectedConfidence, result);
   }
 
-  static Stream<Arguments> explanationTestCases() {
+  static Stream<Arguments> explanationTestCases_provider() {
     return Stream.of(
         Arguments.of("Exact match", 0, true, EXACT_MATCH.getExplanation()),
         Arguments.of("Non-exact match with 0 matches", 0, false, NO_MATCH.getExplanation()),
@@ -52,14 +52,14 @@ class NameMatchingHelperTest extends ABaseUnitTest {
   }
 
   @ParameterizedTest(name = "{0}")
-  @MethodSource("explanationTestCases")
+  @MethodSource("explanationTestCases_provider")
   void testDetermineExplanation(
       String caseName, int numMatches, boolean isExactMatch, String expectedExplanation) {
     String result = nameMatchingHelper.determineExplanation(numMatches, isExactMatch);
     assertEquals(expectedExplanation, result);
   }
 
-  static Stream<Arguments> preprocessNameTestCases() {
+  static Stream<Arguments> preprocessNameTestCases_provider() {
     return Stream.of(
         Arguments.of("Empty string", "", ""),
         Arguments.of("String with noise words", "The quick brown fox", "quick brown fox"),
@@ -69,7 +69,7 @@ class NameMatchingHelperTest extends ABaseUnitTest {
   }
 
   @ParameterizedTest(name = "{0}")
-  @MethodSource("preprocessNameTestCases")
+  @MethodSource("preprocessNameTestCases_provider")
   void testPreprocessName(String caseName, String input, String expected) {
     String result = nameMatchingHelper.preprocessName(input);
     assertEquals(expected, result);
