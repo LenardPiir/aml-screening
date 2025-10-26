@@ -5,6 +5,7 @@ import com.lhv.amlscreening.application.dto.SanctionedListMatchResponse;
 import com.lhv.amlscreening.application.dto.SanctionedListNameRequest;
 import com.lhv.amlscreening.application.dto.SanctionedListNameResponse;
 import com.lhv.amlscreening.domain.service.NameMatchingService;
+import jakarta.validation.Valid;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,9 +21,9 @@ public class SanctionedListController {
 
   private final NameMatchingService nameMatchingService;
 
-  // TODO: add that name cannot be null
   @PostMapping(SanctionedListApi.PATH_CHECK_NAME)
-  public SanctionedListMatchResponse checkName(@RequestBody SanctionedListNameRequest request) {
+  public SanctionedListMatchResponse checkName(
+      @Valid @RequestBody SanctionedListNameRequest request) {
     return nameMatchingService.checkName(request.fullName());
   }
 
