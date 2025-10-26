@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="2025/10/23.1" author="Lenard">
+        <sql>CREATE SCHEMA IF NOT EXISTS aml_screening_schema;</sql>
+    </changeSet>
+
+    <changeSet id="2025/10/23.2" author="Lenard">
+        <sql>
+            CREATE EXTENSION IF NOT EXISTS pg_trgm;
+        </sql>
+    </changeSet>
+
+    <changeSet id="2025/10/23.3" author="Lenard">
+        <sql>
+            CREATE TABLE IF NOT EXISTS aml_screening_schema.watchlist_names
+            (
+                id UUID PRIMARY KEY NOT NULL,
+                full_name VARCHAR(255) NOT NULL,
+                created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL
+                );
+        </sql>
+    </changeSet>
+
+    <changeSet id="2025/10/23.4" author="Lenard">
+        <sql>
+            CREATE INDEX IF NOT EXISTS idx_watchlist_fullname_trgm
+                ON aml_screening_schema.watchlist_names USING gin (full_name gin_trgm_ops);
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>
