@@ -34,8 +34,6 @@ public class NameMatchingServiceE2ETest extends ABaseE2ETest {
                 .content(requestJson))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.isMatch").value(true))
-        .andExpect(
-            jsonPath("$.matchedNames[0].fullName")
-                .value("Usama  Bin  Muhammed  Bin  Awad,  Osama  Bin  Laden"));
+        .andExpect(jsonPath("$.matchedNames[0].fullName").value("Ben Laden Osama"));
   }
 }

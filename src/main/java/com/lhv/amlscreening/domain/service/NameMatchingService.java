@@ -12,6 +12,7 @@ import com.lhv.amlscreening.domain.repository.sanctionedlist.elastic.SanctionedL
 import com.lhv.amlscreening.domain.repository.sanctionedlist.jpa.SanctionedListJPARepository;
 import jakarta.transaction.Transactional;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -48,6 +49,14 @@ public class NameMatchingService {
 
     List<SanctionedListNameResponse> matchedNames =
         matchingNames.stream()
+            .filter(Objects::nonNull)
+            .collect(
+                Collectors.toMap(
+                    SanctionedListEntity::getFullName,
+                    entity -> entity,
+                    (existing, replacement) -> replacement))
+            .values()
+            .stream()
             .map(entity -> new SanctionedListNameResponse(entity.getId(), entity.getFullName()))
             .collect(Collectors.toList());
 
