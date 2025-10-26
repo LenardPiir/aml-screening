@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="2025/10/26.1" author="Lenard">
+        <sql>
+            ALTER TABLE aml_screening_schema.watchlist_names
+                RENAME TO sanctioned_list_names;
+        </sql>
+    </changeSet>
+
+    <changeSet id="2025/10/26.2" author="Lenard">
+        <sql>
+            ALTER TABLE aml_screening_schema.sanctioned_list_names
+                ADD COLUMN updated_at TIMESTAMP WITHOUT TIME ZONE;
+        </sql>
+    </changeSet>
+
+    <changeSet id="2025/10/26.3" author="Lenard">
+        <sql>
+            DROP INDEX IF EXISTS aml_screening_schema.idx_watchlist_fullname_trgm;
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

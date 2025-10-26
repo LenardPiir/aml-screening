@@ -4,6 +4,7 @@ import static com.lhv.amlscreening.domain.model.MatchConfidence.*;
 
 import com.lhv.amlscreening.application.dto.SanctionedListMatchResponse;
 import com.lhv.amlscreening.application.dto.SanctionedListNameResponse;
+import com.lhv.amlscreening.application.exception.SanctionedListNameNotFoundException;
 import com.lhv.amlscreening.application.mapper.SanctionedListMapper;
 import com.lhv.amlscreening.domain.entity.SanctionedListEntity;
 import com.lhv.amlscreening.domain.model.MatchConfidence;
@@ -11,6 +12,7 @@ import com.lhv.amlscreening.domain.repository.sanctionedlist.elastic.SanctionedL
 import com.lhv.amlscreening.domain.repository.sanctionedlist.jpa.SanctionedListJPARepository;
 import jakarta.transaction.Transactional;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -60,14 +62,41 @@ public class NameMatchingService {
 
   @Transactional
   public SanctionedListNameResponse addName(String fullName) {
-    String processedFullName = nameMatchingHelper.preprocessName(fullName);
-
-    SanctionedListEntity entity = sanctionedListMapper.toSanctionedListEntity(processedFullName);
+    SanctionedListEntity entity = sanctionedListMapper.toSanctionedListEntity(fullName);
 
     sanctionedListJPARepository.save(entity);
     sanctionedListElasticRepository.save(entity);
 
-    log.info("Added new watchlist name: {}", processedFullName);
+    log.info("Added new watchlist name: {}", entity.getFullName());
     return new SanctionedListNameResponse(entity.getId(), entity.getFullName());
+  }
+
+  @Transactional
+  public SanctionedListNameResponse updateName(UUID id, String fullName) {
+    SanctionedListEntity entity =
+        sanctionedListJPARepository
+            .findById(id)
+            .orElseThrow(() -> new SanctionedListNameNotFoundException(id));
+
+    entity.setFullName(fullName);
+
+    sanctionedListJPARepository.save(entity);
+    sanctionedListElasticRepository.save(entity);
+
+    log.info("Updated name for ID: {} with new name: {}", id, fullName);
+    return new SanctionedListNameResponse(entity.getId(), entity.getFullName());
+  }
+
+  @Transactional
+  public void deleteName(UUID id) {
+    SanctionedListEntity entity =
+        sanctionedListJPARepository
+            .findById(id)
+            .orElseThrow(() -> new SanctionedListNameNotFoundException(id));
+
+    sanctionedListJPARepository.delete(entity);
+    sanctionedListElasticRepository.delete(entity);
+
+    log.info("Deleted name for ID: {}", id);
   }
 }

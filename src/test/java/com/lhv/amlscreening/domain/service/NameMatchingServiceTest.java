@@ -8,6 +8,7 @@ import static org.mockito.Mockito.*;
 
 import com.lhv.amlscreening.application.dto.SanctionedListMatchResponse;
 import com.lhv.amlscreening.application.dto.SanctionedListNameResponse;
+import com.lhv.amlscreening.application.exception.SanctionedListNameNotFoundException;
 import com.lhv.amlscreening.application.mapper.SanctionedListMapper;
 import com.lhv.amlscreening.domain.entity.SanctionedListEntity;
 import com.lhv.amlscreening.domain.model.MatchConfidence;
@@ -17,6 +18,7 @@ import com.lhv.amlscreening.domain.repository.sanctionedlist.jpa.SanctionedListJ
 import com.lhv.amlscreening.testhelpers.base.ABaseUnitTest;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -98,17 +100,79 @@ class NameMatchingServiceTest extends ABaseUnitTest {
   @Test
   void testAddName() {
     String fullName = A_FULL_NAME_JOHN;
-    String processedName = A_PROCESSED_NAME;
-    SanctionedListEntity entity = aSanctionedListEntity(processedName);
+    SanctionedListEntity entity = aSanctionedListEntity(fullName);
 
-    when(nameMatchingHelper.preprocessName(fullName)).thenReturn(processedName);
-    when(sanctionedListMapper.toSanctionedListEntity(processedName)).thenReturn(entity);
+    when(sanctionedListMapper.toSanctionedListEntity(fullName)).thenReturn(entity);
 
     SanctionedListNameResponse response = nameMatchingService.addName(fullName);
 
     assertEquals(entity.getId(), response.id());
-    assertEquals(processedName, response.fullName());
+    assertEquals(fullName, response.fullName());
     verify(sanctionedListJPARepository, times(1)).save(entity);
     verify(sanctionedListElasticRepository, times(1)).save(entity);
+  }
+
+  @Test
+  void testUpdateName() {
+    UUID existingId = A_UUID;
+    String newFullName = A_FULL_NAME_JANE;
+
+    SanctionedListEntity existingEntity = aSanctionedListEntity(A_FULL_NAME_JOHN);
+    existingEntity.setId(existingId);
+
+    when(sanctionedListJPARepository.findById(existingId))
+        .thenReturn(java.util.Optional.of(existingEntity));
+
+    existingEntity.setFullName(newFullName);
+
+    when(sanctionedListJPARepository.save(existingEntity)).thenReturn(existingEntity);
+    when(sanctionedListElasticRepository.save(existingEntity)).thenReturn(existingEntity);
+
+    SanctionedListNameResponse response = nameMatchingService.updateName(existingId, newFullName);
+
+    assertEquals(existingId, response.id());
+    assertEquals(newFullName, response.fullName());
+    verify(sanctionedListJPARepository, times(1)).save(existingEntity);
+    verify(sanctionedListElasticRepository, times(1)).save(existingEntity);
+  }
+
+  @Test
+  void testDeleteName() {
+    UUID existingId = A_UUID;
+
+    SanctionedListEntity existingEntity = aSanctionedListEntity(A_FULL_NAME_JOHN);
+    existingEntity.setId(existingId);
+
+    when(sanctionedListJPARepository.findById(existingId))
+        .thenReturn(java.util.Optional.of(existingEntity));
+
+    nameMatchingService.deleteName(existingId);
+
+    verify(sanctionedListJPARepository, times(1)).delete(existingEntity);
+    verify(sanctionedListElasticRepository, times(1)).delete(existingEntity);
+  }
+
+  @Test
+  void testUpdateName_ThrowsExceptionIfNotFound() {
+    UUID nonExistentId = A_UUID;
+
+    when(sanctionedListJPARepository.findById(nonExistentId))
+        .thenReturn(java.util.Optional.empty());
+
+    assertThrows(
+        SanctionedListNameNotFoundException.class,
+        () -> nameMatchingService.updateName(nonExistentId, A_FULL_NAME_JANE));
+  }
+
+  @Test
+  void testDeleteName_ThrowsExceptionIfNotFound() {
+    UUID nonExistentId = A_UUID;
+
+    when(sanctionedListJPARepository.findById(nonExistentId))
+        .thenReturn(java.util.Optional.empty());
+
+    assertThrows(
+        SanctionedListNameNotFoundException.class,
+        () -> nameMatchingService.deleteName(nonExistentId));
   }
 }

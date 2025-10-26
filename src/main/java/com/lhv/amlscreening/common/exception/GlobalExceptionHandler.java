@@ -1,5 +1,6 @@
 package com.lhv.amlscreening.common.exception;
 
+import com.lhv.amlscreening.application.exception.SanctionedListNameNotFoundException;
 import com.lhv.amlscreening.application.exception.SanctionedListParseException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,5 +15,11 @@ public class GlobalExceptionHandler {
       SanctionedListParseException ex) {
     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
         .body("Error parsing the sanctioned list: " + ex.getMessage());
+  }
+
+  @ExceptionHandler(SanctionedListNameNotFoundException.class)
+  public ResponseEntity<String> handleSanctionedListNameNotFoundException(
+      SanctionedListNameNotFoundException ex) {
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
   }
 }

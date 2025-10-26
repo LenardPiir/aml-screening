@@ -1,8 +1,6 @@
 package com.lhv.amlscreening.domain.entity;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.UUID;
 import lombok.*;
 import org.springframework.data.elasticsearch.annotations.Document;
@@ -10,8 +8,7 @@ import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
 @Entity
-// TODO: rename
-@Table(name = "watchlist_names", schema = "aml_screening_schema")
+@Table(name = "sanctioned_list_names", schema = "aml_screening_schema")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -26,23 +23,24 @@ public class SanctionedListEntity {
   private String fullName;
 
   @Column(name = "created_at", nullable = false, updatable = false)
-  private LocalDateTime createdAt;
-
-  @Transient
   @Field(type = FieldType.Date)
-  private Long createdAtForElasticSearch;
+  private Long createdAt;
 
-  public SanctionedListEntity(UUID id, String fullName, LocalDateTime createdAt) {
+  @Column(name = "updated_at")
+  @Field(type = FieldType.Date)
+  private Long updatedAt;
+
+  public SanctionedListEntity(UUID id, String fullName, Long createdAt) {
     this.id = id;
     this.fullName = fullName;
     this.createdAt = createdAt;
-    this.createdAtForElasticSearch = createdAt.toInstant(ZoneOffset.UTC).toEpochMilli();
+    this.updatedAt = null;
   }
 
-  @PostLoad
-  public void afterLoad() {
-    if (createdAt != null) {
-      this.createdAtForElasticSearch = createdAt.toInstant(ZoneOffset.UTC).toEpochMilli();
+  @PreUpdate
+  public void beforeUpdate() {
+    if (updatedAt == null) {
+      this.updatedAt = System.currentTimeMillis();
     }
   }
 }

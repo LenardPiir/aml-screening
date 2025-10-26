@@ -6,5 +6,7 @@
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
     <include file="changelog/create-initial-schema-and-tables.xml" relativeToChangelogFile="true"/>
+    <include file="changelog/rename-tables-and-fields.xml" relativeToChangelogFile="true"/>
+    <include file="changelog/change-date-type.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

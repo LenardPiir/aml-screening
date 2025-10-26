@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="2025/10/26.1" author="Lenard">
+        <sql>
+            ALTER TABLE aml_screening_schema.sanctioned_list_names
+                ALTER COLUMN updated_at SET DATA TYPE BIGINT
+                USING EXTRACT(EPOCH FROM updated_at) * 1000::BIGINT;
+        </sql>
+    </changeSet>
+
+    <changeSet id="2025/10/26.2" author="Lenard">
+        <sql>
+            ALTER TABLE aml_screening_schema.sanctioned_list_names
+                ALTER COLUMN created_at SET DATA TYPE BIGINT
+                USING EXTRACT(EPOCH FROM created_at) * 1000::BIGINT;
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>
