@@ -9,13 +9,10 @@ import jakarta.validation.Valid;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(
-    path = SanctionedListApi.ROOT_SANCTIONED_LIST_V1,
-    consumes = {MediaType.APPLICATION_JSON_VALUE})
+@RequestMapping(path = SanctionedListApi.ROOT_SANCTIONED_LIST_V1)
 @RequiredArgsConstructor
 public class SanctionedListController {
 
