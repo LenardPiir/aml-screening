@@ -13,15 +13,16 @@ public interface SanctionedListElasticRepository
 
   @Query(
       """
-    {
-        "match": {
-            "fullName": {
-                "query": "?0",
-                "fuzziness": "AUTO",
-                "minimum_should_match": "80%"
+            {
+                "match": {
+                    "fullName": {
+                        "query": "?0",
+                        "fuzziness": "AUTO",
+                        "minimum_should_match": "80%",
+                        "operator": "and"
+                    }
+                }
             }
-        }
-    }
-    """)
+            """)
   List<SanctionedListEntity> findByFullNameFuzzy(String fullName);
 }
