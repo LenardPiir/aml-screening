@@ -10,6 +10,7 @@ public class CommonTestFixtures {
   public static final String A_FULL_NAME_JOHN = "John Doe";
   public static final String A_FULL_NAME_JANE = "Jane Smith";
   public static final String A_FULL_NAME_OSAMA = "Osama Bin Laden";
+  public static final String A_FULL_NAME_BEN_OSAMA = "Ben Laden Osama";
   public static final String A_PROCESSED_NAME = "john doe";
   public static final String A_NAME_WITH_MISSING_LETTERS = "Jon Doe";
 

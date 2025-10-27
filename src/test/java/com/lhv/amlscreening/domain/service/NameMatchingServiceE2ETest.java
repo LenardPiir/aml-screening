@@ -1,5 +1,6 @@
 package com.lhv.amlscreening.domain.service;
 
+import static com.lhv.amlscreening.testhelpers.fixtures.CommonTestFixtures.A_FULL_NAME_BEN_OSAMA;
 import static com.lhv.amlscreening.testhelpers.fixtures.CommonTestFixtures.A_FULL_NAME_OSAMA;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -34,6 +35,6 @@ public class NameMatchingServiceE2ETest extends ABaseE2ETest {
                 .content(requestJson))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.isMatch").value(true))
-        .andExpect(jsonPath("$.matchedNames[0].fullName").value("Ben Laden Osama"));
+        .andExpect(jsonPath("$.matchedNames[0].fullName").value(A_FULL_NAME_BEN_OSAMA));
   }
 }
