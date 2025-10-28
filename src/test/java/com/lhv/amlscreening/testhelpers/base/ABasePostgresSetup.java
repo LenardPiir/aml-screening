@@ -2,14 +2,12 @@ package com.lhv.amlscreening.testhelpers.base;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Testcontainers
 public class ABasePostgresSetup {
   private static final String POSTGRES_IMAGE = "postgres:18";
@@ -20,7 +18,8 @@ public class ABasePostgresSetup {
           .withDatabaseName("testdb")
           .withUsername("testuser")
           .withPassword("testpassword")
-          .withReuse(true);
+          .withReuse(true)
+          .withInitScript("database/create_sanction_list_schema_and_changelog.sql");
 
   @BeforeAll
   static void setupContainer() {

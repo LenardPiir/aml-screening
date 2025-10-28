@@ -1,7 +1,7 @@
 package com.lhv.amlscreening.domain.service;
 
-import static com.lhv.amlscreening.testhelpers.fixtures.CommonTestFixtures.A_FULL_NAME_BEN_OSAMA;
-import static com.lhv.amlscreening.testhelpers.fixtures.CommonTestFixtures.A_FULL_NAME_OSAMA;
+import static com.lhv.amlscreening.testhelpers.fixtures.CommonTestFixtures.A_FULL_NAME_SADDAM;
+import static com.lhv.amlscreening.testhelpers.fixtures.CommonTestFixtures.A_FULL_NAME_SADDAM_AL_TIKRITI;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -14,9 +14,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 
 @AutoConfigureMockMvc
+// TODO: refactor
+@TestPropertySource(locations = "classpath:application-test.properties")
 public class NameMatchingServiceE2ETest extends ABaseE2ETest {
 
   @Autowired private MockMvc mockMvc;
@@ -25,7 +28,7 @@ public class NameMatchingServiceE2ETest extends ABaseE2ETest {
 
   @Test
   public void testCheckName() throws Exception {
-    SanctionedListNameRequest request = new SanctionedListNameRequest(A_FULL_NAME_OSAMA);
+    SanctionedListNameRequest request = new SanctionedListNameRequest(A_FULL_NAME_SADDAM);
     String requestJson = objectMapper.writeValueAsString(request);
 
     mockMvc
@@ -35,6 +38,6 @@ public class NameMatchingServiceE2ETest extends ABaseE2ETest {
                 .content(requestJson))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.isMatch").value(true))
-        .andExpect(jsonPath("$.matchedNames[0].fullName").value(A_FULL_NAME_BEN_OSAMA));
+        .andExpect(jsonPath("$.matchedNames[0].fullName").value(A_FULL_NAME_SADDAM_AL_TIKRITI));
   }
 }

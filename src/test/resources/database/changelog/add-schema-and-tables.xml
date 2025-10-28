@@ -4,44 +4,23 @@
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
-        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
-    <changeSet id="2025/10/26.1" author="Lenard">
+    <changeSet id="2025/10/28.1" author="Lenard">
         <sql>
-            CREATE TABLE IF NOT EXISTS sanctioned_list_names (
-                id UUID PRIMARY KEY NOT NULL,
-                full_name VARCHAR(255) NOT NULL,
-                created_at BIGINT NOT NULL,
-                updated_at BIGINT
-                );
+            CREATE SCHEMA IF NOT EXISTS aml_screening_schema;
         </sql>
     </changeSet>
 
-    <changeSet id="2025/10/26.2" author="Lenard">
-        <insert tableName="sanctioned_list_names">
-            <column name="id" value="f32cb99b-fbc6-46b1-a7c3-060ddab18444"/>
-            <column name="full_name" value="Osama Bin Laden"/>
-            <column name="created_at" value="1633036800000"/>
-            <column name="updated_at" value="1633036800000"/>
-        </insert>
-    </changeSet>
-
-    <changeSet id="2025/10/26.3" author="Lenard">
-        <insert tableName="sanctioned_list_names">
-            <column name="id" value="b29fd9e1-15bb-4c75-b59b-815c77ecfa94"/>
-            <column name="full_name" value="Osama Laden"/>
-            <column name="created_at" value="1633036800000"/>
-            <column name="updated_at" value="1633036800000"/>
-        </insert>
-    </changeSet>
-
-    <changeSet id="2025/10/26.4" author="Lenard">
-        <insert tableName="sanctioned_list_names">
-            <column name="id" value="abc12c57-6b7a-4b3e-b883-cfedf19c34fa"/>
-            <column name="full_name" value="Bin Laden Osama"/>
-            <column name="created_at" value="1633036800000"/>
-            <column name="updated_at" value="1633036800000"/>
-        </insert>
+    <changeSet id="2025/10/28.2" author="Lenard">
+        <createTable tableName="sanctioned_list_names" schemaName="aml_screening_schema">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="full_name" type="varchar(255)"/>
+            <column name="created_at" type="bigint"/>
+            <column name="updated_at" type="bigint"/>
+        </createTable>
     </changeSet>
 
 </databaseChangeLog>
