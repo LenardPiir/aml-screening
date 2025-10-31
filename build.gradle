@@ -61,6 +61,7 @@ spotless {
     }
 }
 
-tasks.named('test') {
-	useJUnitPlatform()
+tasks.test {
+    useJUnitPlatform()
+    systemProperty "spring.profiles.active", "test"
 }
