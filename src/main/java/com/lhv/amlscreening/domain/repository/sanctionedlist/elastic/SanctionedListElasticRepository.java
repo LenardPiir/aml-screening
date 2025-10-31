@@ -19,7 +19,7 @@ public interface SanctionedListElasticRepository
                         "query": "?0",
                         "fuzziness": "AUTO",
                         "minimum_should_match": "80%",
-                        "operator": "and"
+                        "operator": "or"
                     }
                 }
             }
