@@ -16,6 +16,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 
 @ExtendWith(MockitoExtension.class)
 class SanctionedListServiceTest extends ABaseUnitTest {
@@ -30,10 +32,12 @@ class SanctionedListServiceTest extends ABaseUnitTest {
 
   @BeforeEach
   void setUp() throws NoSuchFieldException, IllegalAccessException {
+    Resource testResource = new ClassPathResource(A_SANCTIONED_LIST_FILE_PATH);
+
     var filePathField =
         SanctionedListService.class.getDeclaredField(A_SANCTIONED_LIST_FILE_PATH_FIELD);
     filePathField.setAccessible(true);
-    filePathField.set(sanctionedListService, A_SANCTIONED_LIST_FILE_PATH);
+    filePathField.set(sanctionedListService, testResource);
   }
 
   @Test

@@ -16,8 +16,7 @@ public class CommonTestFixtures {
 
   public static final UUID A_UUID = UUID.randomUUID();
 
-  public static final String A_SANCTIONED_LIST_FILE_PATH =
-      "src/test/resources/dataset/20251007-FULL-1_0.csv";
+  public static final String A_SANCTIONED_LIST_FILE_PATH = "dataset/20251007-FULL-1_0.csv";
   public static final String A_SANCTIONED_LIST_FILE_PATH_FIELD = "sanctionedListFilePath";
 
   public static final String A_CSV_DATA = "Naal_wholename\nJohn Doe\nJane Smith";

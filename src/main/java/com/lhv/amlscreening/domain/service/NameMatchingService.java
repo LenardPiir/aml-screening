@@ -14,9 +14,11 @@ import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -28,6 +30,7 @@ public class NameMatchingService {
   private final SanctionedListElasticRepository sanctionedListElasticRepository;
   private final SanctionedListJPARepository sanctionedListJPARepository;
   private final SanctionedListMapper sanctionedListMapper;
+  private final ApplicationEventPublisher eventPublisher;
 
   @Transactional
   public SanctionedListMatchResponse checkName(String fullName) {
@@ -53,12 +56,12 @@ public class NameMatchingService {
             .collect(
                 Collectors.toMap(
                     SanctionedListEntity::getFullName,
-                    entity -> entity,
+                    Function.identity(),
                     (existing, replacement) -> replacement))
             .values()
             .stream()
             .map(entity -> new SanctionedListNameResponse(entity.getId(), entity.getFullName()))
-            .collect(Collectors.toList());
+            .toList();
 
     MatchConfidence matchConfidence =
         nameMatchingHelper.determineConfidence(matchingNames, isExactMatch);
